@@ -1,24 +1,30 @@
 const loapPhone = async (searchText) => {
-    const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
-    const data = await res.json();
-    const phone = data.data;
-    // console.log(phone);  
-    displayPhone(phone)
+  const res = await fetch(`https://openapi.programming-hero.com/api/phones?search=${searchText}`);
+  const data = await res.json();
+  const phone = data.data;
+  // console.log(phone);  
+  displayPhone(phone)
 }
 
 // display-phones
 
 const displayPhone = phones => {
-    const phonesContainer = document.getElementById('phone-container');
-    phonesContainer.textContent = ''
-    // console.log(phones)
-    phones.forEach(phone => {
-        
-        // console.log(phone)
-        const phoneCard = document.createElement('div')
-        
-        phoneCard.classList = `card bg-gray-100 w-96 shadow-xl`
-        phoneCard.innerHTML = `<figure class="px-10 pt-10">
+  const phonesContainer = document.getElementById('phone-container');
+  phonesContainer.textContent = '';
+  // console.log(phones)
+  const seeMore = document.getElementById("see-more")
+  // console.log(seeMore)
+  if (phones.length > 9) {
+    seeMore.classList.remove('hidden');
+  } else {
+    seeMore.classList.add('hidden');
+  }
+
+  phones = phones.slice(0, 9)
+  phones.forEach(phone => {
+    const phoneCard = document.createElement('div')
+    phoneCard.classList = `card bg-gray-100 w-96 shadow-xl`
+    phoneCard.innerHTML = `<figure class="px-10 pt-10">
                       <img
                         src="${phone.image}"
                         alt="Phone"
@@ -30,19 +36,31 @@ const displayPhone = phones => {
                       <div class="card-actions">
                         <button class="btn btn-primary">Buy Now</button>
                       </div>
-                    </div>
-        `
-        phonesContainer.appendChild(phoneCard)
-    });
+                    </div> `
+    phonesContainer.appendChild(phoneCard)
+  });
+  // hide-loadingSpiner
+toggleLoadingSpiner(false)
 
 }
 // search-button
-const handleSearch=()=>{
-    // console.log('ok')
-    const searchField = document.getElementById('search-field')
-    const searchText= searchField.value
-    loapPhone(searchText)
-    // console.log(searchText)
+const handleSearch = () => {
+  toggleLoadingSpiner(true)
+  const searchField = document.getElementById('search-field')
+  const searchText = searchField.value
+  loapPhone(searchText)
+
+}
+
+const toggleLoadingSpiner = (isLoading) => {
+  const loadingSpiner = document.getElementById('loading-spinner')
+  if (isLoading) {
+    loadingSpiner.classList.remove('hidden')
+  }
+  else{
+    loadingSpiner.classList.add('hidden')
+  }
+
 }
 
 
